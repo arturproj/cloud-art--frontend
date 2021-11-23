@@ -8,18 +8,26 @@ import Typography from "@mui/material/Typography";
 import Copyright from "../Copyright";
 import FormBox from "./components/FormBox";
 
-export default function RegisterComponent() {
+import { authUser } from "../../share/api/cloud_art";
+
+export default function LoginComponent(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
+
+    authUser({
       email: data.get("email"),
       password: data.get("password"),
-      conditions: data.get("conditions") ? true : false,
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+      .finally((res) => console.log(res));
+      
+    console.log({
+      conditions: data.get("remember") ? true : false,
     });
   };
-
   return (
     <Box
       sx={{
@@ -41,8 +49,7 @@ export default function RegisterComponent() {
         <Grid container>
           <Grid item xs>
             <Link href="/register" variant="body2">
-            {"Don't have an account? Sign Up"}
-              
+              {"Don't have an account? Sign Up"}
             </Link>
           </Grid>
         </Grid>

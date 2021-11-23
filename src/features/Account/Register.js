@@ -6,20 +6,29 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Copyright from "../Copyright";
-import FormBox from "./components/FormBox"
+import FormBox from "./components/FormBox";
 
-export default function RegisterComponent() {
+import { authUser } from "../../share/api/cloud_art";
+
+export default function RegisterComponent(props) {
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
+
+    const data = new FormData(event.currentTarget); 
+
+    authUser({
       email: data.get("email"),
       password: data.get("password"),
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+      .finally((res) => console.log(res));
+
+    console.log({
       conditions: data.get("conditions") ? true : false,
     });
   };
-
   return (
     <Box
       sx={{
@@ -37,7 +46,7 @@ export default function RegisterComponent() {
         Sign Up
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-        <FormBox label="Sing Up" conditions="I accept the Terms & Conditions"/>
+        <FormBox label="Sing Up" conditions="I accept the Terms & Conditions" />
         <Grid container>
           <Grid item xs>
             <Link href="/login" variant="body2">
