@@ -1,36 +1,57 @@
 import * as React from "react";
 import { Outlet } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
 
-class LayoutAuthentication extends React.Component {
-  render() {
-    return (
-      <Grid container component="main" sx={{ height: "100vh" }}>
+import DashAppBar from "../features/Dashboard/components/DashAppBar";
+import DashDrawer from "../features/Dashboard/components/DashDrawer";
+
+const drawerWidth = 240;
+
+const mdTheme = createTheme();
+
+function DashboardContent() {
+  const [open, setOpen] = React.useState(true);
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
+
+  return (
+    <ThemeProvider theme={mdTheme}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: "url(https://source.unsplash.com/random)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
+        <DashAppBar
+          open={open}
+          toggleDrawer={toggleDrawer}
+          drawerWidth={drawerWidth}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Outlet/>
-        </Grid>
-      </Grid>
-    );
-  }
+        <DashDrawer
+          open={open}
+          toggleDrawer={toggleDrawer}
+          drawerWidth={drawerWidth}
+        />
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+          }}
+        >
+          <Toolbar />
+          <Outlet />
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
 }
 
-export default LayoutAuthentication;
+export default function Dashboard() {
+  return <DashboardContent />;
+}
