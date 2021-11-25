@@ -7,27 +7,31 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Copyright from "../Copyright";
 import FormBox from "./components/FormBox";
+import { useHistory} from "react-router-dom";
+import { addUser } from "../../share/api/cloud_art";
 
-import { authUser } from "../../share/api/cloud_art";
+const validateRegistration = (response) => {
+  console.log(response);
+};
 
-export default function RegisterComponent(props) {
-
+export default function RegisterComponent() {
+  const [onLoad, setLoad] = React.useState(false);
+  // const history = useHistory();
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoad(true);
 
-    const data = new FormData(event.currentTarget); 
+    const data = new FormData(event.currentTarget);
 
-    authUser({
+    addUser({
       email: data.get("email"),
       password: data.get("password"),
     })
-      .then((res) => console.log(res))
+      .then(validateRegistration)
       .catch((err) => console.log(err))
       .finally((res) => console.log(res));
 
-    console.log({
-      conditions: data.get("conditions") ? true : false,
-    });
+      // history.push("/login");
   };
   return (
     <Box
@@ -46,7 +50,12 @@ export default function RegisterComponent(props) {
         Sign Up
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-        <FormBox label="Sing Up" conditions="I accept the Terms & Conditions" />
+        <FormBox
+          label="Sing Up"
+          conditions="I accept the Terms & Conditions"
+          checkBoxRequired
+          onLoad={onLoad}
+        />
         <Grid container>
           <Grid item xs>
             <Link href="/login" variant="body2">

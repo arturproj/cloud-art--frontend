@@ -11,8 +11,12 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
 
 export default function FormData(props) {
+  console.log(props);
+  const { label, conditions, autoComplete, checkBoxRequired, onLoad } = props;
+
   return (
     <React.Fragment>
       <TextField
@@ -22,7 +26,8 @@ export default function FormData(props) {
         id="email"
         label="Email Address"
         name="email"
-        autoComplete="off"
+        autoComplete={autoComplete ? "email" : "off"}
+        disabled={onLoad}
         autoFocus
       />
       <TextField
@@ -33,16 +38,43 @@ export default function FormData(props) {
         label="Password"
         name="password"
         type="password"
-        autoComplete="off"
-        autoComplete="off"
+        autoComplete={autoComplete ? "current-password" : "off"}
+        disabled={onLoad}
       />
       <FormControlLabel
-        control={<Checkbox name="conditions" color="primary" required />}
-        label={props.conditions}
+        control={
+          <Checkbox
+            name="conditions"
+            color="primary"
+            required={checkBoxRequired}
+            disabled={onLoad}
+          />
+        }
+        label={conditions}
       />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        {props.label}
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        disabled={onLoad}
+      >
+        {label}
       </Button>
     </React.Fragment>
   );
 }
+
+FormData.propTypes = {
+  conditions: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  autoComplete: PropTypes.bool,
+  checkBoxRequired: PropTypes.bool,
+};
+
+FormData.defaultProps = {
+  conditions: "",
+  label: "",
+  autoComplete: false,
+  checkBoxRequired: false,
+};

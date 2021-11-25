@@ -7,26 +7,35 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Copyright from "../Copyright";
 import FormBox from "./components/FormBox";
-
+import { connect } from "react-redux";
+import { loginStateToProps, loginDispatchToProps } from "./reducer";
 import { authUser } from "../../share/api/cloud_art";
 
-export default function LoginComponent(props) {
+const validateLogin = (response) => {
+  console.log(response);
+};
+export function LoginComponent(props) {
+  console.log(props);
+  const [onLoad, setLoad] = React.useState(false);
+  // const history = useHistory();
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoad(true);
 
     const data = new FormData(event.currentTarget);
+
+    localStorage.setItem("remember", Boolean(data.get("conditions")));
 
     authUser({
       email: data.get("email"),
       password: data.get("password"),
     })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
-      .finally((res) => console.log(res));
-      
-    console.log({
-      conditions: data.get("remember") ? true : false,
-    });
+      .then((res) => {
+        props.login(res);
+        console.log(props);
+        setLoad(false);
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <Box
@@ -45,7 +54,12 @@ export default function LoginComponent(props) {
         Sign In
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-        <FormBox label="Sing In" conditions="Remember me" />
+        <FormBox
+          label="Sing In"
+          conditions="Remember me"
+          autoComplete
+          onLoad={onLoad}
+        />
         <Grid container>
           <Grid item xs>
             <Link href="/register" variant="body2">
@@ -62,3 +76,5 @@ export default function LoginComponent(props) {
     </Box>
   );
 }
+
+export default connect(loginStateToProps, loginDispatchToProps)(LoginComponent);
