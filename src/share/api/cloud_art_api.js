@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setStorage } from "./userUtils";
+import { setStorage } from "./helpers";
 
 export const get = (url) => axios.get(url);
 
@@ -11,7 +11,16 @@ const setupHeadersJSON = () => {
   axios.defaults.headers.common["Accept"] = "application/json";
   axios.defaults.headers.common["Content-Type"] = "application/json";
 };
+const setupHeadersFILE = () => {
+  axios.defaults.headers.common["Accept"] = "multipart/form-data";
+  axios.defaults.headers.common["Content-Type"] = "multipart/form-data";
+};
 
+/**
+ * Call promise to api register
+ * @param {object} params
+ * @returns {object} response
+ */
 export const addUser = async (params) => {
   setupHeadersJSON();
   const result = await post(`${REACT_APP_API_URL}/register`, params);
@@ -38,17 +47,31 @@ export const authUser = async (params) => {
  * @param {object} params
  * @returns {object} response
  */
- export const checkToken = async (params) => {
+export const checkToken = async (params) => {
   setupHeadersJSON();
-  const response = await post(`${REACT_APP_API_URL}/token`, params).then(
-    setStorage
-  );
+  const response = await post(
+    `${REACT_APP_API_URL}/refresh-token`,
+    params
+  ).then(setStorage);
 
   return response;
 };
 
 const setAutorisation = () => {
   axios.defaults.headers.common["Authorization"] = `Dixeed token`;
+};
+
+export const uploadImage = async (file) => {
+  setupHeadersFILE();
+  let formData = new FormData();
+
+  formData.append("file", file);
+
+  return await post(`${REACT_APP_API_URL}/upload`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 // export const getProducts = async () => {

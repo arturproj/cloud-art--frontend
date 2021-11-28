@@ -5,34 +5,12 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Copyright from "../Copyright";
-import FormBox from "./components/FormBox";
-import { useHistory} from "react-router-dom";
-import { addUser } from "../../share/api/cloud_art";
+import FormBox from "../components/FormBox";
+import PropTypes from "prop-types";
 
-const validateRegistration = (response) => {
-  console.log(response);
-};
-
-export default function RegisterComponent() {
-  const [onLoad, setLoad] = React.useState(false);
-  // const history = useHistory();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setLoad(true);
-
-    const data = new FormData(event.currentTarget);
-
-    addUser({
-      email: data.get("email"),
-      password: data.get("password"),
-    })
-      .then(validateRegistration)
-      .catch((err) => console.log(err))
-      .finally((res) => console.log(res));
-
-      // history.push("/login");
-  };
+export function RegisterComponent(props) {
+  console.log("RegisterComponent", props);
+  const { onLoad, handleSubmit } = props;
   return (
     <Box
       sx={{
@@ -63,12 +41,14 @@ export default function RegisterComponent() {
             </Link>
           </Grid>
         </Grid>
-        <Copyright
-          name="Your Website"
-          url="https://www.google.com"
-          style={{ sx: { mt: 5 } }}
-        />
       </Box>
     </Box>
   );
 }
+
+RegisterComponent.propTypes = {
+  onLoad: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
+
+export default RegisterComponent;
