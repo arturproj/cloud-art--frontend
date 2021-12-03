@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "/usr/bin/python3",
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#3362fd",
+        "statusBar.background": "#3362fd",
+    },
+    "peacock.color": "#d702fb"
+}

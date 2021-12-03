@@ -15,52 +15,82 @@ import PropTypes from "prop-types";
 
 export default function FormData(props) {
   console.log(props);
-  const { label, conditions, autoComplete, checkBoxRequired, onLoad } = props;
+  const {
+    label,
+    conditions,
+    autoComplete,
+    checkBoxRequired,
+    onLoad,
+    handleSubmit,
+  } = props;
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [checkbox, setCheckbox] = React.useState("off");
+
+  const sendData = (event) => {
+    event.preventDefault();
+    handleSubmit({ email, password, checkbox });
+  };
 
   return (
     <React.Fragment>
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete={autoComplete ? "email" : "off"}
-        disabled={onLoad}
-        autoFocus
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="password"
-        label="Password"
-        name="password"
-        type="password"
-        autoComplete={autoComplete ? "current-password" : "off"}
-        disabled={onLoad}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            name="conditions"
-            color="primary"
-            required={checkBoxRequired}
-            disabled={onLoad}
-          />
-        }
-        label={conditions}
-      />
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        disabled={onLoad}
-      >
-        {label}
-      </Button>
+      <Box component="form" onSubmit={sendData} sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          value={email}
+          onInput={(e) => setEmail(e.target.value)}
+          autoComplete={autoComplete.toString()}
+          disabled={onLoad}
+          autoFocus
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="password"
+          label="Password"
+          name="password"
+          type="password"
+          value={password}
+          onInput={(e) => setPassword(e.target.value)}
+          autoComplete={autoComplete.toString()}
+          disabled={onLoad}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="conditions"
+              color="primary"
+              value={checkbox}
+              onChange={(e) => setCheckbox(e.target.checked)}
+              required={checkBoxRequired}
+              disabled={onLoad}
+            />
+          }
+          label={conditions}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          disabled={onLoad}
+        >
+          {label}
+        </Button>
+        <Grid container>
+          <Grid item xs>
+            <Link href="/register" variant="body2">
+              {"Don't have an account? Sign Up"}
+            </Link>
+          </Grid>
+        </Grid>
+      </Box>
     </React.Fragment>
   );
 }

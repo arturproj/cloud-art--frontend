@@ -3,7 +3,8 @@ import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -25,6 +26,7 @@ const AppBar = styled(MuiAppBar, {
 
 function AppBarComponent(props) {
   const { label, isAuthenticated, user } = props;
+  const navigate = useNavigate();
   console.log("AppBarComponent", props);
 
   return (
@@ -40,6 +42,7 @@ function AppBarComponent(props) {
           color="inherit"
           noWrap
           sx={{ flexGrow: 1 }}
+          onClick={() => navigate("/")}
         >
           {label}
         </Typography>
@@ -48,45 +51,45 @@ function AppBarComponent(props) {
           {" "}
           {isAuthenticated ? (
             <>
-              <Link
+              <Button
                 color="inherit"
                 variant="body"
-                href="/protected"
+                onClick={() => navigate("/protected")}
                 underline="none"
                 sx={{ mx: 1 }}
               >
                 {"account".toUpperCase()}
-              </Link>
-              <Link
+              </Button>
+              <Button
                 color="inherit"
                 variant="body"
-                href="/logout"
+                onClick={() => navigate("/logout ")}
                 underline="none"
                 sx={{ mx: 1 }}
               >
                 {"logout".toUpperCase()}
-              </Link>
+              </Button>
             </>
           ) : (
             <>
-              <Link
+              <Button
                 color="inherit"
                 variant="body"
-                href="/login"
+                onClick={() => navigate("/login")}
                 underline="none"
                 sx={{ mx: 1 }}
               >
                 {"login".toUpperCase()}
-              </Link>
-              <Link
+              </Button>
+              <Button
                 color="inherit"
                 variant="body"
-                href="/register"
+                onClick={() => navigate("/register")}
                 underline="none"
                 sx={{ mx: 1 }}
               >
                 {"register".toUpperCase()}
-              </Link>
+              </Button>
             </>
           )}
         </>

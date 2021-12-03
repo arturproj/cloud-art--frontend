@@ -8,9 +8,20 @@ import Typography from "@mui/material/Typography";
 import FormBox from "../components/FormBox";
 import PropTypes from "prop-types";
 
+import { authUser } from "../../../share/api/cloud_art_api";
+
 export function LoginComponent(props) {
   console.log("LoginComponent", props);
-  const { onLoad, handleSubmit } = props;
+  const [onLoad, setLoad] = React.useState(false);
+
+  const handleSubmit = async (data) => {
+    data.checkbox = data.checkbox === "on" ? true : false;
+    let res = await authUser(data);
+
+    if (res.success) {
+      window.location = "/";
+    }
+  };
 
   return (
     <Box
@@ -28,28 +39,15 @@ export function LoginComponent(props) {
       <Typography component="h1" variant="h5">
         Sign In
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-        <FormBox
-          label="Sing In"
-          conditions="Remember me"
-          autoComplete
-          onLoad={onLoad}
-        />
-        <Grid container>
-          <Grid item xs>
-            <Link href="/register" variant="body2">
-              {"Don't have an account? Sign Up"}
-            </Link>
-          </Grid>
-        </Grid>
-      </Box>
+      <FormBox
+        label="Sing In"
+        conditions="Remember me"
+        autoComplete
+        handleSubmit={handleSubmit}
+        onLoad={onLoad}
+      />
     </Box>
   );
 }
-
-LoginComponent.propTypes = {
-  onLoad: PropTypes.bool.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-};
 
 export default LoginComponent;

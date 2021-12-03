@@ -1,39 +1,24 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { login, logout, auth } from "./actionCreator";
 import { setStorage, getStorage, clearStorage } from "../../share/api/helpers";
+import { checkToken } from "../../share/api/cloud_art_api";
 
-const validateReducer = () => {
-  let user = getStorage();
-
-  if (user.email && user.token) {
-    console.log("validateReducer", user);
-    return {
-      isAuthenticated: true,
-      user,
-    };
-  }
-
-  return {
-    isAuthenticated: false,
-    user: null,
-  };
+const initialState = {
+  isAuthenticated: false,
+  user: null,
 };
-
-const initialState = validateReducer();
 
 const authReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(login, (state, action) => {
-      return {
-        ...state,
-        isAuthenticated: true,
-        user: setStorage(action.payload.data),
-      };
-    })
+    .addCase(login, (state, action) => ({
+      ...state,
+      isAuthenticated: true,
+      user: action.payload,
+    }))
     .addCase(logout, (state) => ({
       ...state,
       isAuthenticated: false,
-      user: clearStorage(),
+      user: null,
     }));
 });
 
@@ -46,6 +31,7 @@ export const authDispatchToProps = (dispatch) => ({
     dispatch(login(user));
   },
   logout: () => {
+    clearStorage();
     dispatch(logout());
   },
   serializeForm: (currentTarget) => new FormData(currentTarget),

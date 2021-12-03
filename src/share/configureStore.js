@@ -40,8 +40,8 @@ export const mapDispatchToProps = (dispatch) => ({
   loadCollection: (images) => {
     dispatch(loadCollection({ images }));
   },
-  loadPreview: (image) => {
-    dispatch(loadPreview(image));
+  loadPreview: (preview) => {
+    dispatch(loadPreview({ preview }));
   },
 });
 

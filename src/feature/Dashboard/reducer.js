@@ -27,10 +27,10 @@ export const dashStateToProps = (state) => ({
 
 export const dashDispatchToProps = (dispatch) => ({
   loadCollection: (images) => {
-    dispatch(loadCollection(images));
+    dispatch(loadCollection({ images }));
   },
-  loadPreview: (image) => {
-    dispatch(loadPreview(image));
+  loadPreview: (preview) => {
+    dispatch(loadPreview({ preview }));
   },
 });
 

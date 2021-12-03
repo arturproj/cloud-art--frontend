@@ -11,10 +11,6 @@ const setupHeadersJSON = () => {
   axios.defaults.headers.common["Accept"] = "application/json";
   axios.defaults.headers.common["Content-Type"] = "application/json";
 };
-const setupHeadersFILE = () => {
-  axios.defaults.headers.common["Accept"] = "multipart/form-data";
-  axios.defaults.headers.common["Content-Type"] = "multipart/form-data";
-};
 
 /**
  * Call promise to api register
@@ -23,9 +19,9 @@ const setupHeadersFILE = () => {
  */
 export const addUser = async (params) => {
   setupHeadersJSON();
-  const result = await post(`${REACT_APP_API_URL}/register`, params);
-
-  return result.data.success;
+  const response = await post(`${REACT_APP_API_URL}/register`, params);
+  console.log(response);
+  return response.data.success;
 };
 
 /**
@@ -35,9 +31,15 @@ export const addUser = async (params) => {
  */
 export const authUser = async (params) => {
   setupHeadersJSON();
+  console.log("authUser", params);
+  localStorage.setItem("conditions", params.checkbox);
   const response = await post(`${REACT_APP_API_URL}/login`, params).then(
-    setStorage
+    (res) => res.data
   );
+  console.log("authUser response", response);
+  if (response.success) {
+    setStorage(response);
+  }
 
   return response;
 };
@@ -47,13 +49,12 @@ export const authUser = async (params) => {
  * @param {object} params
  * @returns {object} response
  */
-export const checkToken = async (params) => {
+export const checkToken = async (token) => {
   setupHeadersJSON();
-  const response = await post(
-    `${REACT_APP_API_URL}/refresh-token`,
-    params
-  ).then(setStorage);
-
+  const response = await post(`${REACT_APP_API_URL}/user/token`, {
+    token,
+  }).then((res) => res.data);
+  console.log("checkToken", response);
   return response;
 };
 
@@ -61,17 +62,14 @@ const setAutorisation = () => {
   axios.defaults.headers.common["Authorization"] = `Dixeed token`;
 };
 
-export const uploadImage = async (file) => {
-  setupHeadersFILE();
-  let formData = new FormData();
+export const uploadImage = async (file_params) => {
+  setupHeadersJSON();
+  const response = await post(
+    `${REACT_APP_API_URL}/image/upload`,
+    file_params
+  ).then((res) => res.data);
 
-  formData.append("file", file);
-
-  return await post(`${REACT_APP_API_URL}/upload`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return response;
 };
 
 // export const getProducts = async () => {
